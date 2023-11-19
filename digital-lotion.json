@@ -1,0 +1,36 @@
+{
+  "builders": [
+    {
+      "type": "digitalocean",
+      "api_token": "YOUR_DIGITALOCEAN_API_TOKEN",
+      "region": "nyc3",
+      "size": "s-1vcpu-1gb",
+      "image": "ubuntu-18-04-x64",
+      "ssh_username": "root"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update",
+        "apt-get install -y nmap zmap python3-pip git golang-go zip curl wget jq gcc musl-dev snap gnupg rename",
+        "curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/main/install-nix.sh | sudo bash -s /usr/local/bin",
+        "export GOPATH=$HOME/go",
+        "export PATH=$PATH:$GOROOT/bin:$GOPATH/bin",
+        "GO111MODULE=on go install github.com/jaeles-project/gospider@latest",
+        "sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1397BC53640DB551",
+        "sudo sh -c 'echo \"deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'",
+        "sudo apt-get update",
+        "sudo apt-get install google-chrome-stable -y",
+        "go install github.com/projectdiscovery/katana/cmd/katana@latest",
+        "go install github.com/lc/gau/v2/cmd/gau@latest",
+        "go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest",
+        "go install github.com/hahwul/dalfox/v2@latest",
+        "git clone https://github.com/devanshbatham/paramspider",
+        "cd paramspider",
+        "pip install ."
+      ]
+    }
+  ]
+}
